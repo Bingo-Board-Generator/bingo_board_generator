@@ -1,7 +1,4 @@
 class BingoBoardGenerator
-  def self.hi
-    puts "Hello world!"
-  end
 
   attr_reader :word_list,
               :grid_size,
