@@ -1,8 +1,8 @@
-# 2110 JASON OBSTACLE COURSE
+# Bingo Board Generator Gem
 ## Setup, Features, and Creation
 
 ### Setup
-- This project was built using `Ruby 2.7.2`.
+- This project was built using `Ruby 2.7.4`.
   - If you do not have a version of Ruby installed on your computer you can check out [this guide](https://www.ruby-lang.org/en/documentation/installation/)
 - Clone down the repository to your local machine.
   - `$ git clone git@github.com:jbreit88/2110_json_obstacle_course.git`
