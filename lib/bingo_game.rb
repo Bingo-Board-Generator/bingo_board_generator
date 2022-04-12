@@ -1,21 +1,19 @@
 require 'matrix'
 
-class JasonGame
-  attr_accessor :jasons_board_array
-  attr_reader :grid_size, :box_length
+class BingoGame
+  attr_reader :grid_size,
+              :box_length,
+              :word_list
 
-  def initialize
-    @grid_size = 4
-    @jasons_board_array = make_board
-    @box_length = @jasons_board_array.max_by(&:length).length + 2
+  def initialize(word_list, grid_size = 4) # Pass in word list as array, and custom gridsize if want.
+    @grid_size = grid_size
+    @word_list = word_list
+    @box_length = @word_list.max_by(&:length).length + 2
   end
 
   def make_board
-    # List of available Jasons. If expanding board add a ton more Jasons
-    jasons = ["mraz", "sudeikis", "alexander", "derulo", "momoa", "bateman", "aldean", "statham", "biggs", "red ranger", "the murderer guy", '.parse', 'waterfalls', 'judakiss', 'and the argonauts', 'bourne']
-
     # Shuffle list, every person gets random shuffling
-    shuffled = jasons.shuffle
+    shuffled = @word_list.shuffle
     sliced = shuffled.slice(0, @grid_size.to_i * @grid_size.to_i - 1)
 
     if @grid_size.odd?
@@ -112,23 +110,23 @@ class JasonGame
     $stdin.gets.chomp
   end
 
-  def change_jason_to_x(input)
+  def change_word_to_x(input)
     new_board_array = []
-    @jasons_board_array.each do |jason|
-      if jason.downcase.strip == input.downcase.strip
-        new_board_array << jason = 'X'
+    @word_list.each do |word|
+      if word.downcase.strip == input.downcase.strip
+        new_board_array << word = 'X'
       else
-        new_board_array << jason
+        new_board_array << word
       end
     end
-    @jasons_board_array = new_board_array
+    @word_list = new_board_array
   end
 
   def render
     titleized = []
 
-    @jasons_board_array.each do |element|
-      titleized << element.split(/ |\_/).map(&:capitalize).join(" ")
+    @word_list.each do |word|
+      titleized << word.split(/ |\_/).map(&:capitalize).join(" ")
     end
 
     board_array = titleized.each_slice(@grid_size).to_a
@@ -139,11 +137,11 @@ class JasonGame
   def check_end_game?
     matrix_array = []
     # convert board array to 1's (the X's) and 0's (anything else)
-    @jasons_board_array.each do |jason|
-      if jason == 'X'
-        matrix_array << jason = 1
+    @word_list.each do |word|
+      if word == 'X'
+        matrix_array << word = 1
       else
-        matrix_array << jason = 0
+        matrix_array << word = 0
       end
     end
 
@@ -159,7 +157,7 @@ class JasonGame
         win = true
       end
 
-      # transpost array and re-run above check
+      # transpose array and re-run above check
       check_column = board_array.transpose[array_position]
       if check_column.reduce(:+) == @grid_size
         win = true
@@ -194,26 +192,26 @@ class JasonGame
 
     input = player_input
     until 'free' == input.downcase
-      puts 'I said type free. Please try again:'
+      puts "I said type 'free'. Please try again:"
       input = player_input
     end
 
-    change_jason_to_x(input)
+    change_word_to_x(input)
 
     loop do
       puts "This is your board:"
       render
-      puts "If you see a Jason that is on your board, type their name below:"
+      puts "If you see a word that is on your board, type the word below:"
       input = player_input
-      until @jasons_board_array.include?(input.downcase.strip)
-        puts 'Not a valid JaSON. Please try again:'
+      until @word_list.include?(input.downcase.strip)
+        puts 'Not a valid word. Please try again:'
         input = player_input
       end
-      change_jason_to_x(input)
+      change_word_to_x(input)
       break if check_end_game?
     end
 
     render
-    puts "You connected #{@grid_size} JaSONs! Quick! Raise your hand and say something!"
+    puts "You connected #{@grid_size} words! Quick! Raise your hand and say something!"
   end
 end
